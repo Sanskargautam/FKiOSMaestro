@@ -1,11 +1,18 @@
 import Foundation
 import XCTest
 import FlyingFox
+import FlyingFox
+import XCTest
 import os
 
 @MainActor
 struct LaunchAppHandler: HTTPHandler {
     
+    private let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier!,
+        category: String(describing: Self.self)
+    )
+
     func handleRequest(_ request: FlyingFox.HTTPRequest) async throws -> FlyingFox.HTTPResponse {
         // Decode request body to extract appId and optional launch arguments
         guard let requestBody = try? await JSONDecoder().decode(LaunchAppRequest.self, from: request.bodyData) else {

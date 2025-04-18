@@ -2,6 +2,7 @@ package ios.xctest
 
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.runCatching
+import com.github.michaelbull.result.toResultOr
 import hierarchy.ViewHierarchy
 import ios.IOSDevice
 import ios.IOSDeviceErrors
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory
 import xcuitest.XCTestDriverClient
 import java.io.InputStream
 import java.util.UUID
+import javax.security.auth.callback.ConfirmationCallback.OK
 
 class XCTestIOSDevice(
     override val deviceId: String?,
@@ -131,7 +133,7 @@ class XCTestIOSDevice(
         error("Not supported")
     }
 
-    override fun uninstall(id: String): Result<Unit, Throwable> {
+    override fun uninstall(id: String) {
         error("Not supported")
     }
 
@@ -143,11 +145,16 @@ class XCTestIOSDevice(
         error("Not supported")
     }
 
+    override fun launch(id: String, launchArguments: Map<String, Any>) {
+        TODO("Not yet implemented")
+    }
+
     override fun launch(
         id: String,
         launchArguments: Map<String, Any>,
         maestroSessionId: UUID?,
-    ): Result<Unit, Throwable> {
+    ): Result<Unit, Throwable>
+    {
         return runCatching {
             execute {
                 client.launchApp(appId = id, launchArguments = launchArguments, maestroSessionId = maestroSessionId)
