@@ -4,6 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import java.io.File
 import maestro.cli.util.EnvUtils.CLI_VERSION
 import org.junit.jupiter.api.Test
+import java.util.logging.LogManager
+
 
 class ChangeLogUtilsTest {
 
@@ -12,9 +14,30 @@ class ChangeLogUtilsTest {
     @Test
     fun `test format last version`() {
         val content = changelogFile.readText()
+        val debugFile = File(System.getenv("GITHUB_WORKSPACE"), "debug-info.txt")
+
+        if (content == null || content.isEmpty()) {
+            throw IllegalStateException("Changelog is empty")
+        }
+
+        if (CLI_VERSION == null || CLI_VERSION.toString().isEmpty()) {
+            throw IllegalStateException("CLI_VERSION is empty")
+        }
 
         val changelog = ChangeLogUtils.formatBody(content, CLI_VERSION.toString())
 
+        if (changelog == null) {
+            debugFile.appendText("Changelog is $content")
+            debugFile.appendText("CLI version is $CLI_VERSION")
+            debugFile.writer().apply {
+                append("Changelog is $content")
+                append("CLI version is $CLI_VERSION")
+                flush()
+                close()
+            }
+
+            throw AssertionError("Changelog is null \n $content $CLI_VERSION")
+        }
         assertThat(changelog).isNotNull()
         assertThat(changelog).isNotEmpty()
     }

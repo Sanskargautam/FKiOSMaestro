@@ -12,6 +12,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
+import kotlin.io.path.createDirectories
 import kotlin.io.path.pathString
 
 
@@ -60,6 +61,7 @@ class RealDeviceDriverTest {
         every { EnvUtils.getCLIVersion() } returns CliVersion.parse("1.3.0")
         every { EnvUtils.CLI_VERSION } returns CliVersion.parse("1.3.0")
         val driverDirectory = Files.createDirectories(Paths.get(tempDir.pathString + "/maestro-iphoneos-driver-build"))
+        driverDirectory.resolve("driver-iphoneos").resolve("Build").resolve("Products").createDirectories()
         val propertiesFile = driverDirectory.resolve("version.properties")
         val teamId = "dummy-team"
         val destination = "destination"

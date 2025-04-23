@@ -28,6 +28,15 @@ jobs:
       - name: Test
         run: ./gradlew test
 
+      - name: Upload test debug files
+        if: always()  # Run even if tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-info
+          path: ${{ github.workspace }}/maestro-cli/build/reports/tests/test/index.html
+
+
+
 
   validate-gradle-wrapper:
     runs-on: ubuntu-latest
