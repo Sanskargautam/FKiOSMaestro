@@ -2,7 +2,22 @@
 
 ## Unreleased
 
-## 1.40.00
+## 1.40.3
+Fix
+- MissingKotlinParameterException during using maestro commands.
+
+## 1.40.2
+Fix
+- Sharding on iOS, throwing FileSystemAlreadyExistsException exception 
+
+## 1.40.1
+Fix
+- iOS apps going on background while using maestro commands
+
+Feature
+- Flag to skip interactive device selection by picking a --device-index
+
+## 1.40.0
 
 Fix:
 - JavaScript fails when running maestro test in continuos mode. Affected Commands: `maestro test`, `maestro record` ([#2311](https://github.com/mobile-dev-inc/Maestro/pull/2311))

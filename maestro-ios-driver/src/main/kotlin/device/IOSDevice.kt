@@ -17,14 +17,13 @@
  *
  */
 
-package ios
+package device
 
 import com.github.michaelbull.result.Result
 import hierarchy.ViewHierarchy
 import xcuitest.api.DeviceInfo
 import okio.Sink
 import java.io.InputStream
-import java.util.UUID
 
 interface IOSDevice : AutoCloseable {
 
@@ -67,7 +66,7 @@ interface IOSDevice : AutoCloseable {
      *
      * @param id = bundle id of the app to uninstall
      */
-    fun uninstall(id: String): Result<Unit, Throwable>
+    fun uninstall(id: String)
 
     /**
      * Clears state of a given application.
@@ -85,13 +84,11 @@ interface IOSDevice : AutoCloseable {
      * Launches the app.
      *
      * @param id - bundle id of the app to launch
-     * @param isWarmup - in case it is warmup and we're not waiting for the logs, the app can be launched from foreground
      */
     fun launch(
         id: String,
         launchArguments: Map<String, Any>,
-        maestroSessionId: UUID?,
-    ): Result<Unit, Throwable>
+    )
 
     /**
      * Terminates the app.

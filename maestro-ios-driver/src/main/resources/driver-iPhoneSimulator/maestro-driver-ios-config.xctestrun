@@ -47,6 +47,8 @@
 			<string>YES</string>
 			<key>SQLITE_ENABLE_THREAD_ASSERTIONS</key>
 			<string>1</string>
+			<key>TERM</key>
+			<string>dumb</string>
 		</dict>
 		<key>IsUITestBundle</key>
 		<true/>
@@ -58,6 +60,11 @@
 		<string>maestro_driver_iosUITests</string>
 		<key>RunOrder</key>
 		<integer>0</integer>
+		<key>SkipTestIdentifiers</key>
+		<array>
+			<string>ViewHierarchyHandlerTests</string>
+			<string>ViewHierarchyHandlerTests/testViewHierarchyHandlerReturnsNonEmptyHierarchy</string>
+		</array>
 		<key>SystemAttachmentLifetime</key>
 		<string>deleteOnSuccess</string>
 		<key>TestBundlePath</key>

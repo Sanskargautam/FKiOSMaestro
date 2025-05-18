@@ -1,11 +1,9 @@
-package ios.simctl
+package device
 
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.onFailure
 import com.github.michaelbull.result.runCatching
 import hierarchy.ViewHierarchy
-import ios.IOSDevice
-import ios.IOSScreenRecording
 import xcuitest.api.DeviceInfo
 import okio.Sink
 import okio.buffer
@@ -13,11 +11,11 @@ import okio.source
 import org.slf4j.LoggerFactory
 import util.IOSLaunchArguments.toIOSLaunchArguments
 import util.LocalSimulatorUtils
+import xcuitest.installer.LocalXCTestInstaller
 import java.io.File
 import java.io.InputStream
 import java.nio.channels.Channels
 import java.nio.file.Files
-import java.util.UUID
 
 class SimctlIOSDevice(
     override val deviceId: String,
@@ -69,10 +67,8 @@ class SimctlIOSDevice(
         LocalSimulatorUtils.install(deviceId, stream)
     }
 
-    override fun uninstall(id: String): Result<Unit, Throwable> {
-        return runCatching {
-            LocalSimulatorUtils.uninstall(deviceId, id)
-        }
+    override fun uninstall(id: String) {
+        LocalSimulatorUtils.uninstall(deviceId, id)
     }
 
     override fun clearAppState(id: String) {
@@ -88,21 +84,17 @@ class SimctlIOSDevice(
     override fun launch(
         id: String,
         launchArguments: Map<String, Any>,
-        maestroSessionId: UUID?,
-    ): Result<Unit, Throwable> {
-        return runCatching {
-            val iOSLaunchArguments = launchArguments.toIOSLaunchArguments()
-            LocalSimulatorUtils.launch(
-                deviceId = deviceId,
-                bundleId = id,
-                launchArguments = iOSLaunchArguments,
-                sessionId = maestroSessionId?.toString() ?: null,
-            )
-        }
+    ) {
+        val iOSLaunchArguments = launchArguments.toIOSLaunchArguments()
+        LocalSimulatorUtils.launch(
+            deviceId = deviceId,
+            bundleId = id,
+            launchArguments = iOSLaunchArguments,
+        )
     }
 
     override fun stop(id: String) {
-        error("Not supported")
+        LocalSimulatorUtils.terminate(deviceId, bundleId = id)
     }
 
     override fun isKeyboardVisible(): Boolean {
@@ -187,6 +179,11 @@ class SimctlIOSDevice(
 
     override fun close() {
         stopScreenRecording()
+
+        logger.info("[Start] Stop and uninstall the runner app")
+        stop(id = LocalXCTestInstaller.UI_TEST_RUNNER_APP_BUNDLE_ID)
+        uninstall(id = LocalXCTestInstaller.UI_TEST_RUNNER_APP_BUNDLE_ID)
+        logger.info("[Done] Stop and uninstall the runner app")
     }
 
 }
